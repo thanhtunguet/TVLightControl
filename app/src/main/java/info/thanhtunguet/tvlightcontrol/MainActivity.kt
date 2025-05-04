@@ -10,6 +10,7 @@ import android.speech.RecognizerIntent
 import android.view.KeyEvent
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import android.app.Instrumentation
 
 class MainActivity : Activity() {
 
@@ -124,6 +125,7 @@ class MainActivity : Activity() {
             assistantIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, command)
             assistantIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
             startActivity(assistantIntent)
+            dismissAssistantAfterDelay()
             return
         } catch (e: ActivityNotFoundException) {
             // Fall back to other methods
@@ -134,6 +136,7 @@ class MainActivity : Activity() {
             val assistantIntent = Intent(Intent.ACTION_VOICE_COMMAND)
             assistantIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, command)
             startActivity(assistantIntent)
+            dismissAssistantAfterDelay()
             return
         } catch (e: ActivityNotFoundException) {
             // Fall back to other methods
@@ -144,9 +147,28 @@ class MainActivity : Activity() {
             val assistantIntent = Intent("android.intent.action.ASSIST")
             assistantIntent.putExtra("query", command)
             startActivity(assistantIntent)
+            dismissAssistantAfterDelay()
         } catch (e: Exception) {
             updateStatus("Could not access Assistant. Please try manually.")
         }
+    }
+    
+    private fun dismissAssistantAfterDelay() {
+        // Wait a moment to allow the command to be processed before dismissing
+        handler.postDelayed({
+            Thread {
+                try {
+                    // Simulate back button press to dismiss the assistant
+                    val instrumentation = Instrumentation()
+                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+                } catch (e: Exception) {
+                    handler.post {
+                        // If there's an error, just log it but don't disrupt the user
+                        updateStatus("Command sent (couldn't auto-dismiss)")
+                    }
+                }
+            }.start()
+        }, 2000) // 2 second delay to allow command to be processed
     }
 
     private fun updateStatus(message: String) {
