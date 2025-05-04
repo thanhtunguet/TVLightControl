@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TV Light Control</string>
+    <string name="instructions">LEFT ARROW: Toggle Bedroom Light\nRIGHT ARROW: Toggle Bathroom Light</string>
+    <string name="status">Ready to control lights</string>
+    <string name="bedroom_light_on">Bedroom light turned ON</string>
+    <string name="bedroom_light_off">Bedroom light turned OFF</string>
+    <string name="bathroom_light_on">Bathroom light turned ON</string>
+    <string name="bathroom_light_off">Bathroom light turned OFF</string>
+</resources>
