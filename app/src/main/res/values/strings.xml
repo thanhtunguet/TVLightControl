@@ -6,4 +6,6 @@
     <string name="bedroom_light_off">Bedroom light turned OFF</string>
     <string name="bathroom_light_on">Bathroom light turned ON</string>
     <string name="bathroom_light_off">Bathroom light turned OFF</string>
+    <string name="accessibility_service_description">Accessibility\n</string>
+    <string name="dpad_key_service_name">DpadKeyService</string>
 </resources>

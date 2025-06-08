@@ -18,12 +18,6 @@ class MainActivity : Activity() {
     private var bedroomLightState = false
     private var bathroomLightState = false
     private val handler = Handler(Looper.getMainLooper())
-    
-    // Variables for tracking double press
-    private var lastKeyCode = -1
-    private var lastKeyTime = 0L
-    private var keyPressCount = 0
-    private val doublePressThreshold = 500L // Milliseconds to detect double press
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,54 +29,36 @@ class MainActivity : Activity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                val currentTime = System.currentTimeMillis()
-                
-                // Check if this is the same key as last press and within threshold
-                if (keyCode == lastKeyCode && (currentTime - lastKeyTime) < doublePressThreshold) {
-                    keyPressCount++
-                } else {
-                    keyPressCount = 1
-                }
-                
-                lastKeyCode = keyCode
-                lastKeyTime = currentTime
-                
                 return true
             }
             else -> return super.onKeyDown(keyCode, event)
         }
     }
-    
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                handler.postDelayed({
-                    if (keyPressCount == 1) {
-                        // Single press - Turn on bedroom light
-                        bedroomLightState = true
-                        toggleBedroomLight(true)
-                    } else if (keyPressCount > 1) {
-                        // Double press - Turn off bedroom light
-                        bedroomLightState = false
-                        toggleBedroomLight(false)
-                    }
-                    keyPressCount = 0
-                }, doublePressThreshold)
+                // Turn ON bedroom light
+                bedroomLightState = true
+                toggleBedroomLight(true)
                 return true
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                handler.postDelayed({
-                    if (keyPressCount == 1) {
-                        // Single press - Turn on bathroom light
-                        bathroomLightState = true
-                        toggleBathroomLight(true)
-                    } else if (keyPressCount > 1) {
-                        // Double press - Turn off bathroom light
-                        bathroomLightState = false
-                        toggleBathroomLight(false)
-                    }
-                    keyPressCount = 0
-                }, doublePressThreshold)
+                // Turn OFF bedroom light
+                bedroomLightState = false
+                toggleBedroomLight(false)
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                // Turn ON bathroom light
+                bathroomLightState = true
+                toggleBathroomLight(true)
+                return true
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                // Turn OFF bathroom light
+                bathroomLightState = false
+                toggleBathroomLight(false)
                 return true
             }
             else -> return super.onKeyUp(keyCode, event)
@@ -152,7 +128,7 @@ class MainActivity : Activity() {
             updateStatus("Could not access Assistant. Please try manually.")
         }
     }
-    
+
     private fun dismissAssistantAfterDelay() {
         // Wait a moment to allow the command to be processed before dismissing
         handler.postDelayed({

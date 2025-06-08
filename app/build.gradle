@@ -59,4 +59,6 @@ dependencies {
     implementation libs.androidx.leanback
     implementation libs.androidx.legacy.support.v4
     implementation libs.androidx.leanback.preference
+
+    implementation libs.play.services.home
 }
